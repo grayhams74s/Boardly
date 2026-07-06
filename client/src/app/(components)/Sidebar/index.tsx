@@ -2,7 +2,8 @@
 
 import { useAppDispatch, useAppSelector } from "@/app/redux";
 import { setIsSidebarCollapsed } from "@/state";
-import { AlertCircle, AlertOctagon, AlertTriangle, Briefcase, ChevronDown, ChevronUp, Home, Layers3, LockIcon, LucideIcon, Search, Settings, ShieldAlert, User, Users, X } from "lucide-react";
+import { useGetProjectsQuery } from "@/state/api";
+import { AlertCircle, AlertOctagon, AlertTriangle, Briefcase, BriefcaseBusiness, ChevronDown, ChevronUp, Home, Layers3, LockIcon, LucideIcon, Search, Settings, ShieldAlert, User, Users, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -12,6 +13,7 @@ const Sidebar = () => {
   const [showProjects, setShowProjects] = useState(true);
   const [showPriority, setShowPriority] = useState(true);
 
+  const { data: project } = useGetProjectsQuery();
   const dispatch = useAppDispatch();
   const isSidebarCollapsed = useAppSelector((state) => state.global.isSidebarCollapsed);
 
@@ -77,6 +79,14 @@ const Sidebar = () => {
         {/* PROJECTS SECTION (collapsible — toggled by showProjects) */}
 
         {/* PROJECTS LIST */}
+        {showProjects && project?.map((project) => (
+          <SidebarLink 
+          key={project.id}
+          icon={BriefcaseBusiness}
+          label={project.name}
+          href={`/projects/${project.id}`}
+          />
+        ))}
 
         <button onClick={() => setShowPriority((prev) => !prev)}
           className="flex w-full items-center justify-between px-8 py-3 text-gray-500 cursor-pointer"
