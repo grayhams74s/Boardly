@@ -185,7 +185,7 @@ const TaskCard = ({ task }: TaskCardProps) => {
       </div>
       <p className="text-sm font-medium text-gray-800 dark:text-white mt-2">{task.title}</p>
       {task.description && (
-        <p className="mt-1 text-xs text-gray-500 dark:text-neutral-400">{task.description}</p>
+        <p className="mt-1 text-xs text-gray-500 dark:text-neutral-400">{task.description}s</p>
       )}
     </div>
   );
