@@ -111,7 +111,7 @@ export const api = createApi({
         updateTaskStatus: build.mutation<Task, {taskId: number; status: string}>({
             query: ({ taskId, status }) => ({
                 url: `tasks/${taskId}/status`,
-                method: "POST",
+                method: "PATCH",
                 body: {status}
             }),
             /** Just so you know if you don't fully understand what's happening here specifically is cause when we update tasks status we're updating a specific task and we're doing this via task ID
@@ -135,5 +135,6 @@ export const {
     useGetProjectsQuery,
     useCreateProjectMutation,
     useGetTasksQuery,
-    useCreateTaskMutation
+    useCreateTaskMutation,
+    useUpdateTaskStatusMutation
 } = api;

@@ -18,7 +18,7 @@ const Sidebar = () => {
   const isSidebarCollapsed = useAppSelector((state) => state.global.isSidebarCollapsed);
 
   const sidebarClassNames =
-    `fixed flex flex-col h-[100%] justify-between shadow-xl transition-all duration-300 h-full z-40 dark:bg-black overflow-y-auto bg-white ${isSidebarCollapsed ? "w-0 hidden" : "w-64"}`;
+    `fixed flex flex-col h-[100%] justify-between shadow-xl transition-all duration-300 h-full z-40 bg-white dark:bg-dark-bg overflow-y-auto ${isSidebarCollapsed ? "w-0 hidden" : "w-64"}`;
 
   return (
     <div className={sidebarClassNames}>
@@ -27,7 +27,7 @@ const Sidebar = () => {
       {/* INNER WRAPPER — vertical stack of all sidebar sections */}
       <div className="flex h-full w-full flex-col justify-start">
         {/* TOP LOGO */}
-        <div className="z-50 flex min-h-[56px] w-64 items-center justify-between bg-white px-6 pt-3 dark:bg-black">
+        <div className="z-50 flex min-h-[56px] w-64 items-center justify-between bg-white px-6 pt-3 dark:bg-dark-bg">
           <div className="text-xl font-bold text-gray-800 dark:text-white">
             EDLIST
           </div>
@@ -40,7 +40,7 @@ const Sidebar = () => {
         </div>
 
         {/* TEAM */}
-        <div className="flex items-center gap-5 border-y-[1.5px] border-gray-200 px-8 py-4 dark:border-gray-700">
+        <div className="flex items-center gap-5 border-y-[1.5px] border-gray-200 px-8 py-4 dark:border-stroke-dark">
           <Image src="/disc.png" alt="logo" width={40} height={40} />
 
           <div>
@@ -134,8 +134,8 @@ const SidebarLink = ({
   return (
     <Link href={href} className="w-full">
       <div
-        className={`relative flex cursor-pointer items-center gap-3 px-8 py-3 transition-colors hover:bg-gray-100 dark:bg-black dark:hover:bg-gray-700 ${
-          isActive ? "bg-gray-100 text-white dark:bg-gray-600" : ""
+        className={`relative flex cursor-pointer items-center gap-3 px-8 py-3 transition-colors hover:bg-gray-100 dark:bg-dark-bg dark:hover:bg-dark-secondary ${
+          isActive ? "bg-gray-100 text-white dark:bg-dark-secondary" : ""
         } justify-start px-8 py-3`}
       >
         {isActive && (
