@@ -1,7 +1,7 @@
 'use client'
 
 import { Task, useGetTasksQuery, useUpdateTaskStatusMutation } from '@/state/api';
-import { EllipsisVertical, PlusCircle, EllipsisVerticalIcon, MessageSquare, MessageCircleDashed } from 'lucide-react';
+import { CalendarDays, EllipsisVertical, PlusCircle, EllipsisVerticalIcon, MessageCircleDashed, Paperclip } from 'lucide-react';
 import Image from 'next/image';
 import React from 'react'
 import { DndProvider, useDrag, useDrop } from 'react-dnd' 
@@ -147,7 +147,9 @@ const TaskCard = ({ task }: TaskCardProps) => {
   }), [task.id]);
 
   
-  const taskTagsSplit = task.tags ? task.tags.split(",") : [];
+  const taskTagsSplit = task.tags
+    ? task.tags.split(",").map((tag) => tag.trim()).filter(Boolean)
+    : [];
 
   const formattedStartDate = task.startDate
   ? format(new Date(task.startDate), "MMM d yyyy")
@@ -157,80 +159,108 @@ const formattedDueDate = task.dueDate
   ? format(new Date(task.dueDate), "MMM d yyyy")
   : "";
 
-  [/** Computed Value Property of Task Comments */]
   const numberOfComments = (task.comments && task.comments.length) || 0;
+  const numberOfAttachments = task.attachments?.length ?? 0;
 
   return (
     <div
       ref={(node) => {
         drag(node);
       }}
-      className={`cursor-grab rounded-md bg-white p-3 shadow-sm active:cursor-grabbing dark:bg-dark-bg ${
-        isDragging ? "opacity-50" : "opacity-100"
+      className={`group cursor-grab overflow-hidden rounded-md border border-gray-200 bg-white shadow-sm transition duration-200 hover:-translate-y-0.5 hover:border-gray-300 hover:shadow-md active:cursor-grabbing dark:border-stroke-dark dark:bg-dark-bg dark:hover:border-gray-500 ${
+        isDragging ? "scale-[0.98] opacity-50" : "opacity-100"
       }`}
     >
       { task.attachments && task.attachments.length > 0 &&  (
-        <Image  src={`/${task.attachments[0].fileURL}`} alt={task.attachments[0].fileName} width={400} height={200} className='h-auto w-full rounded-t-md' />
+        <div className="relative aspect-[16/7] overflow-hidden bg-gray-100 dark:bg-dark-secondary">
+          <Image
+            src={`/${task.attachments[0].fileURL}`}
+            alt={task.attachments[0].fileName}
+            fill
+            sizes="(min-width: 1280px) 22vw, (min-width: 768px) 45vw, 100vw"
+            className="object-cover transition duration-300 group-hover:scale-[1.02]"
+          />
+        </div>
       )}
-      <div className='py-3'>
+      <div className="p-4">
         <div className='flex items-start justify-between'>
           <div className='flex flex-1 flex-wrap items-center gap-2'>
             {task.priority && <PriorityTag priority={task.priority} />}
-            <div className='flex gap-2'>
+            <div className='flex flex-wrap gap-1.5'>
               {taskTagsSplit.map(( tag ) => (
-                <div key={tag} className='rounded-full bg-blue-100 px-2 py-1 text-xs dark:text-black'> {tag} </div>
+                <span key={tag} className='rounded bg-gray-100 px-2 py-1 text-[11px] font-medium text-gray-600 dark:bg-dark-secondary dark:text-gray-300'>
+                  {tag}
+                </span>
               ))}
             </div>  
           </div> 
-          <button className='flex h-6 w-4 shrink-0 items-center justify-center dark:text-neutral-500 cursor-pointer'>
-            <EllipsisVertical size={26} />
+          <button
+            type="button"
+            aria-label={`More options for ${task.title}`}
+            title="Task options"
+            className='ml-2 flex h-7 w-7 shrink-0 cursor-pointer items-center justify-center rounded text-gray-400 opacity-70 hover:bg-gray-100 hover:text-gray-700 group-hover:opacity-100 dark:hover:bg-dark-secondary dark:hover:text-white'
+          >
+            <EllipsisVertical size={18} />
           </button>
         </div>
-      </div>
-      <p className="text-sm font-medium text-gray-800 dark:text-white mt-2">{task.title}</p>
-      <div className='text-xs text-gray-500 dark:text-neutral-500 py-2'>
-        {formattedStartDate && <span>{formattedStartDate} - </span>}
-        {formattedDueDate && <span>{formattedDueDate}</span>}
-      </div>
-      {task.description && (
-        <p className="mt-1 text-xs text-gray-500 dark:text-neutral-400">{task.description}s</p>
-      )}
+        <h4 className="mt-3 text-sm font-semibold leading-5 text-gray-900 dark:text-white">
+          {task.title}
+        </h4>
+        {task.description && (
+          <p className="mt-1.5 line-clamp-2 text-xs leading-5 text-gray-500 dark:text-gray-400">
+            {task.description}
+          </p>
+        )}
 
-      {/** Users */}
-      <div  className='mt-3 flex items-center justify-between'>
-        <div className='flex space-x-[-6px] overflow-hidden'>
-          {/** Asignee Users */}
-          {task.assignee && (
-            <Image 
-            key={task.assignedUserId} 
-            src={`/${task.assignee.profilePictureUrl!}`} 
-            alt={task.assignee.username}
-            width={30} 
-            height={30} 
-            className='h-8 w-8 rounded-full border-2 border-white object-cover dark:border-dark-secondary'
-            />
-          )}
-          {/** Author */}
-          {task.author && (
-            <Image 
-            key={task.author.userId} 
-            src={`/${task.author.profilePictureUrl!}`} 
-            alt={task.author.username}
-            width={30} 
-            height={30} 
-            className='h-8 w-8 rounded-full border-2 border-white object-cover dark:border-dark-secondary'
-            />
-          )}
-        </div>
-        {/** Comments */}
-        <div className='flex items-center text-gray-500 dark:text-neutral-500'>
-          <MessageCircleDashed size={20}/>
-          <span className='ml-1 text-sm dark:text-neutral-500'>
-            {numberOfComments}
-          </span>
+        {(formattedStartDate || formattedDueDate) && (
+          <div className='mt-3 flex items-center gap-1.5 text-[11px] text-gray-500 dark:text-gray-400'>
+            <CalendarDays className="h-3.5 w-3.5 shrink-0" />
+            <span>
+              {formattedStartDate}
+              {formattedStartDate && formattedDueDate && " - "}
+              {formattedDueDate}
+            </span>
+          </div>
+        )}
+
+        <div className='mt-4 flex items-center justify-between border-t border-gray-100 pt-3 dark:border-stroke-dark'>
+          <div className='flex -space-x-2 overflow-hidden'>
+            {task.assignee?.profilePictureUrl && (
+              <Image
+                src={`/${task.assignee.profilePictureUrl}`}
+                alt={task.assignee.username}
+                title={`Assigned to ${task.assignee.username}`}
+                width={28}
+                height={28}
+                className='h-7 w-7 rounded-full border-2 border-white object-cover dark:border-dark-bg'
+              />
+            )}
+            {task.author?.profilePictureUrl && (
+              <Image
+                src={`/${task.author.profilePictureUrl}`}
+                alt={task.author.username}
+                title={`Created by ${task.author.username}`}
+                width={28}
+                height={28}
+                className='h-7 w-7 rounded-full border-2 border-white object-cover dark:border-dark-bg'
+              />
+            )}
+          </div>
+
+          <div className='flex items-center gap-3 text-gray-400 dark:text-gray-500'>
+            {numberOfAttachments > 0 && (
+              <span className="flex items-center gap-1" title={`${numberOfAttachments} attachments`}>
+                <Paperclip className="h-4 w-4" />
+                <span className="text-xs">{numberOfAttachments}</span>
+              </span>
+            )}
+            <span className='flex items-center gap-1' title={`${numberOfComments} comments`}>
+              <MessageCircleDashed className="h-4 w-4" />
+              <span className='text-xs'>{numberOfComments}</span>
+            </span>
+          </div>
         </div>
       </div>
-
     </div>
   );
 };
@@ -239,16 +269,16 @@ const formattedDueDate = task.dueDate
 
 const PriorityTag = ({ priority }: { priority: TaskType["priority"] }) => (
   <div
-    className={`rounded-full px-2 py-1 text-xs font-semibold ${
+    className={`rounded px-2 py-1 text-[11px] font-semibold ${
       priority === "Urgent"
-        ? "bg-red-200 text-red-700"
+        ? "bg-red-100 text-red-700 dark:bg-red-950 dark:text-red-300"
         : priority === "High"   
-          ? "bg-yellow-200 text-yellow-700"
+          ? "bg-orange-100 text-orange-700 dark:bg-orange-950 dark:text-orange-300"
           : priority === "Medium"
-            ? "bg-green-200 text-green-700"
+            ? "bg-amber-100 text-amber-700 dark:bg-amber-950 dark:text-amber-300"
             : priority === "Low"
-              ? "bg-blue-200 text-blue-700"
-              : "bg-gray-200 text-gray-700"
+              ? "bg-blue-100 text-blue-700 dark:bg-blue-950 dark:text-blue-300"
+              : "bg-gray-100 text-gray-600 dark:bg-dark-secondary dark:text-gray-300"
     }`}
   >
     {priority}
