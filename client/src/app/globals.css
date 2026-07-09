@@ -37,11 +37,9 @@
   --color-stroke-dark: #2d3135;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+.dark {
+  --background: #101214;
+  --foreground: #ffffff;
 }
 
 body {

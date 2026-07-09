@@ -178,9 +178,9 @@ const formattedDueDate = task.dueDate
             {task.priority && <PriorityTag priority={task.priority} />}
             <div className='flex gap-2'>
               {taskTagsSplit.map(( tag ) => (
-                <div key={tag} className='rounded-full bg-blue-100 px-2 py-1 text-xs'> {tag} </div>
+                <div key={tag} className='rounded-full bg-blue-100 px-2 py-1 text-xs dark:text-black'> {tag} </div>
               ))}
-            </div>
+            </div>  
           </div> 
           <button className='flex h-6 w-4 shrink-0 items-center justify-center dark:text-neutral-500 cursor-pointer'>
             <EllipsisVertical size={26} />
@@ -242,7 +242,7 @@ const PriorityTag = ({ priority }: { priority: TaskType["priority"] }) => (
     className={`rounded-full px-2 py-1 text-xs font-semibold ${
       priority === "Urgent"
         ? "bg-red-200 text-red-700"
-        : priority === "High"
+        : priority === "High"   
           ? "bg-yellow-200 text-yellow-700"
           : priority === "Medium"
             ? "bg-green-200 text-green-700"

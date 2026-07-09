@@ -28,7 +28,34 @@ const TaskCard  = ({ task }: Props) => {
             </div>
         )}
         <p>
-            <strong>ID:</strong>  {task.id}
+            <strong>ID:</strong>{task.id}
+        </p>
+        <p>
+            <strong>Title:</strong>{task.title}
+        </p>
+        <p>
+            <strong>Description:</strong>{""}
+            {task.description || "No Description provided"}
+        </p>
+        <p>
+            <strong>Status:</strong>  {task.status}
+        </p>
+        <p>
+            <strong>Priority:</strong>  {task.priority}
+        </p>
+        <p>
+            <strong>Start Date:</strong> {""}
+            {task.startDate ? format(new Date(task.startDate), "P") : "Not set"}
+        </p>
+        <p>
+            <strong>Due Date:</strong>{""}
+            {task.dueDate ? format(new Date(task.dueDate), "P") : "Not Set"}
+        </p>
+        <p>
+            <strong>Author:</strong> {task.author ? task.author.username : "Unknown"}
+        </p>
+        <p>
+            <strong>Asignee:</strong> {task.assignee ? task.assignee.username : "Unassigned"}
         </p>
     </div>
   )

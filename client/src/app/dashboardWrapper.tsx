@@ -12,16 +12,12 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
   const isDarkMode = useAppSelector((state) => state.global.isDarkMode);
 
   useEffect(() => {
-    if (isDarkMode) {
-      document.documentElement.classList.add("dark")
-    } else {
-      document.documentElement.classList.remove("dark");
-    }
-  })
+    document.documentElement.classList.toggle("dark", isDarkMode);
+  }, [isDarkMode]);
    
 
   return (
-    <div className="flex min-h-screen w-full bg-gray-50 text-gray-900">
+    <div className="flex min-h-screen w-full bg-gray-50 text-gray-900 dark:bg-dark-bg dark:text-white">
       {/* Sidebar */}
       <Sidebar />
       <main className={`flex w-full flex-col bg-gray-50 dark:bg-dark-bg ${
