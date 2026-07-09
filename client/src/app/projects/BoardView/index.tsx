@@ -1,7 +1,7 @@
 'use client'
 
 import { Task, useGetTasksQuery, useUpdateTaskStatusMutation } from '@/state/api';
-import { EllipsisVertical, PlusCircle, EllipsisVerticalIcon } from 'lucide-react';
+import { EllipsisVertical, PlusCircle, EllipsisVerticalIcon, MessageSquare, MessageCircleDashed } from 'lucide-react';
 import Image from 'next/image';
 import React from 'react'
 import { DndProvider, useDrag, useDrop } from 'react-dnd' 
@@ -157,6 +157,9 @@ const formattedDueDate = task.dueDate
   ? format(new Date(task.dueDate), "MMM d yyyy")
   : "";
 
+  [/** Computed Value Property of Task Comments */]
+  const numberOfComments = (task.comments && task.comments.length) || 0;
+
   return (
     <div
       ref={(node) => {
@@ -192,6 +195,42 @@ const formattedDueDate = task.dueDate
       {task.description && (
         <p className="mt-1 text-xs text-gray-500 dark:text-neutral-400">{task.description}s</p>
       )}
+
+      {/** Users */}
+      <div  className='mt-3 flex items-center justify-between'>
+        <div className='flex space-x-[-6px] overflow-hidden'>
+          {/** Asignee Users */}
+          {task.assignee && (
+            <Image 
+            key={task.assignedUserId} 
+            src={`/${task.assignee.profilePictureUrl!}`} 
+            alt={task.assignee.username}
+            width={30} 
+            height={30} 
+            className='h-8 w-8 rounded-full border-2 border-white object-cover dark:border-dark-secondary'
+            />
+          )}
+          {/** Author */}
+          {task.author && (
+            <Image 
+            key={task.author.userId} 
+            src={`/${task.author.profilePictureUrl!}`} 
+            alt={task.author.username}
+            width={30} 
+            height={30} 
+            className='h-8 w-8 rounded-full border-2 border-white object-cover dark:border-dark-secondary'
+            />
+          )}
+        </div>
+        {/** Comments */}
+        <div className='flex items-center text-gray-500 dark:text-neutral-500'>
+          <MessageCircleDashed size={20}/>
+          <span className='ml-1 text-sm dark:text-neutral-500'>
+            {numberOfComments}
+          </span>
+        </div>
+      </div>
+
     </div>
   );
 };
