@@ -1,3 +1,4 @@
+import Header from '@/app/(components)/Header';
 import { useGetTasksQuery } from '@/state/api';
 import React from 'react'
 
@@ -20,8 +21,8 @@ const ListView =  ({ id, setIsModalNewTaskOpen }: Props) => {
 
   return (
     <div className='px-4 pb-8 xl:px-6'>
-        <div  className='pt-5'> 
-
+        <div className='pt-5'> 
+            <Header name="List" />
         </div>
     </div>
   )
