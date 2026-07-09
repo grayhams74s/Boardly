@@ -150,11 +150,12 @@ const TaskCard = ({ task }: TaskCardProps) => {
   const taskTagsSplit = task.tags ? task.tags.split(",") : [];
 
   const formattedStartDate = task.startDate
-    ? format(new Date(task.startDate), "P")
-    : "";
-  const formattedDueDate = task.dueDate
-    ? format(new Date(task.dueDate), "P")
-    : "";
+  ? format(new Date(task.startDate), "MMM d yyyy")
+  : "";
+
+const formattedDueDate = task.dueDate
+  ? format(new Date(task.dueDate), "MMM d yyyy")
+  : "";
 
   return (
     <div
@@ -184,6 +185,10 @@ const TaskCard = ({ task }: TaskCardProps) => {
         </div>
       </div>
       <p className="text-sm font-medium text-gray-800 dark:text-white mt-2">{task.title}</p>
+      <div className='text-xs text-gray-500 dark:text-neutral-500 py-2'>
+        {formattedStartDate && <span>{formattedStartDate} - </span>}
+        {formattedDueDate && <span>{formattedDueDate}</span>}
+      </div>
       {task.description && (
         <p className="mt-1 text-xs text-gray-500 dark:text-neutral-400">{task.description}s</p>
       )}
