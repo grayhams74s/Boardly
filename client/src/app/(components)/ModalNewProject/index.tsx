@@ -1,6 +1,7 @@
 import { useCreateProjectMutation } from '@/state/api';
 import React, { useState } from 'react'
 import Modal from '../Modal';
+import { FilePlusCorner, Paperclip, PaperclipIcon } from 'lucide-react';
 
 
 type Props = {
@@ -41,7 +42,26 @@ const ModalNewProject = ({ isOpen, onClose }: Props) => {
     <Modal name="Task" isOpen={isOpen} onClose={onClose}>
         {/**We want to make sure that when we hit submit we don't refresh the page and we do that by e.preventDefault */}
         <form action="" className='mt-4 space-y-6' onSubmit={(e) => {e.preventDefault(); handleSubmit();}}>
-            <input type="text" className={inputStyles} placeholder='Project Name' value={projectName} />
+            <input type="text" className={inputStyles} placeholder='Project Name' value={projectName} onChange={(e) => setProjectName(e.target.value)} />
+
+            <textarea className={inputStyles} placeholder='Description' value={description} onChange={(e) => setDescription(e.target.value)} />
+
+            <div className='grid grid-cols-1 gap-6 sm:grid-cols-2 sm:gap-2'>
+                 <input type='date' className={inputStyles} value={startDate} onChange={(e) => setStartDate(e.target.value)} />
+                 <input type='date' className={inputStyles} value={endDate} onChange={(e) => setEndDate(e.target.value)} />
+            </div>
+            <button
+            type="submit"
+            disabled={!isFormValid() || isLoading}
+            className={`mt-4 flex w-full justify-center rounded-md border border-transparent bg-blue-primary px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-blue-600 focus:ring-2 focus:ring-blue-600 focus:ring-offset-2 ${
+                !isFormValid() || isLoading ? "cursor-not-allowed opacity-50" : ""
+            }`}
+            >
+                <div className='flex items-center justify-center gap-2'>
+                    {isLoading ? "Loading..." : "Create Project"} 
+                    <FilePlusCorner className='w-6 h-6' />
+                </div>
+            </button>
         </form>
     </Modal>
   )
