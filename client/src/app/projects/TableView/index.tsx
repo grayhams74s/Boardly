@@ -4,6 +4,7 @@ import { format } from 'date-fns';
 import React from 'react'
 import { DataGrid, GridColDef } from "@mui/x-data-grid"
 import { dataGridGlass } from '@/app/lib/utils';
+import { Plus, PlusCircle } from 'lucide-react';
 
 type TableViewProps = {
     id: string;
@@ -174,9 +175,17 @@ const TableView = ({ id, setIsModalNewTaskOpen }: TableViewProps) => {
 
   return (
     <div className='h-[540px] w-full px-4 pb-8 xl:px-6 '>
-      <div className='pt-5'>
+      <div className='pt-5 flex items-center justify-between'>
         <Header name="Table" isSmallText />
+        <button
+                type="button"
+                onClick={() => setIsModalNewTaskOpen(true)}
+                className="flex h-9 shrink-0 items-center gap-2 whitespace-nowrap rounded bg-blue-500 px-3 text-sm font-medium text-white transition-colors hover:bg-blue-600 cursor-pointer">
+                <Plus className="h-4 w-4" />
+                Add task
+        </button>
       </div>
+
       <DataGrid 
         rows={tasks || []}
         columns={columns} 
