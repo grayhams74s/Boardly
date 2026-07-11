@@ -1,5 +1,6 @@
 import { useCreateProjectMutation } from '@/state/api';
 import React, { useState } from 'react'
+import Modal from '../Modal';
 
 
 type Props = {
@@ -33,11 +34,16 @@ const ModalNewProject = ({ isOpen, onClose }: Props) => {
         return projectName && description && startDate && endDate;
     };
 
+    const inputStyles = "w-full rounded border border-gray-300 p-2 shadow-sm dark:border-dark-tertiary dark:bg-dark-teriarty dark:text-white dark:focus:outline-none"
+
 
   return (
-    <div>
-        Modal New Project
-    </div>
+    <Modal name="Task" isOpen={isOpen} onClose={onClose}>
+        {/**We want to make sure that when we hit submit we don't refresh the page and we do that by e.preventDefault */}
+        <form action="" className='mt-4 space-y-6' onSubmit={(e) => {e.preventDefault(); handleSubmit();}}>
+            <input type="text" className={inputStyles} placeholder='Project Name' value={projectName} />
+        </form>
+    </Modal>
   )
 }
 
