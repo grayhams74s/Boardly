@@ -4,7 +4,7 @@ import { format } from 'date-fns';
 import React from 'react'
 import { DataGrid, GridColDef } from "@mui/x-data-grid"
 import { dataGridGlass } from '@/app/lib/utils';
-import { Plus, PlusCircle } from 'lucide-react';
+import { Plus } from 'lucide-react';
 
 type TableViewProps = {
     id: string;
@@ -157,6 +157,15 @@ const dataGridSx = {
   },
 };
 
+const getTableHeight = (rowCount: number) => {
+  const headerHeight = 48;
+  const rowHeight = 52;
+  const footerHeight = 52;
+  const borderHeight = 2;
+
+  return Math.min(560, Math.max(220, headerHeight + rowCount * rowHeight + footerHeight + borderHeight));
+};
+
 const TableView = ({ id, setIsModalNewTaskOpen }: TableViewProps) => {
 
     const {
@@ -173,8 +182,10 @@ const TableView = ({ id, setIsModalNewTaskOpen }: TableViewProps) => {
         return <div className="p-6 text-sm text-red-600 dark:text-red-400">An error occurred while fetching tasks.</div>;
       }
 
+      const tableHeight = getTableHeight(tasks?.length ?? 0);
+
   return (
-    <div className='h-[540px] w-full px-4 pb-8 xl:px-6 '>
+    <div className='w-full px-4 pb-8 xl:px-6'>
       <div className='pt-5 flex items-center justify-between'>
         <Header name="Table" isSmallText />
         <button
@@ -186,12 +197,16 @@ const TableView = ({ id, setIsModalNewTaskOpen }: TableViewProps) => {
         </button>
       </div>
 
-      <DataGrid 
-        rows={tasks || []}
-        columns={columns} 
-        className={dataGridGlass}
-        sx={dataGridSx}
-      />
+      <div style={{ height: tableHeight }}>
+        <DataGrid
+          rows={tasks || []}
+          columns={columns}
+          className={dataGridGlass}
+          sx={dataGridSx}
+          rowHeight={52}
+          columnHeaderHeight={48}
+        />
+      </div>
     </div>
   )
 }

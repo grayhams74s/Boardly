@@ -1,7 +1,9 @@
 import { useCreateProjectMutation } from '@/state/api';
 import React, { useState } from 'react'
 import Modal from '../Modal';
-import { FilePlusCorner, Paperclip, PaperclipIcon } from 'lucide-react';
+import { FilePlusCorner } from 'lucide-react';
+import { formatISO } from  "date-fns"
+import { toast } from "sonner";
 
 
 type Props = {
@@ -19,15 +21,39 @@ const ModalNewProject = ({ isOpen, onClose }: Props) => {
     const handleSubmit = async () => {
         if (!projectName || !startDate  || !endDate ) return
 
-        [/** API CALL FROM OUR REDUX TOOL KIT API QUERY */]
+        const formattedStartDate = formatISO(new Date(startDate), { representation: "complete"})
+        const formattedEndDate = formatISO(new Date(endDate), { representation: "complete"})
+
+        const toastId = toast.loading("Creating project", {
+            description: "Please wait while your project is being created.",
+        });
+
+        {/** API CALL FROM OUR REDUX TOOL KIT API QUERY */}
         {/** We Create New Project we're passing in the project list that gets sent to the backend and our backend is going to utilize
             this values once we hit submit. */}
-        await createProject({
-            name: projectName,
-            description: description,
-            startDate: startDate,
-            endDate: endDate
-        })
+        try {
+            await createProject({
+                name: projectName,
+                description: description,
+                startDate: formattedStartDate,
+                endDate: formattedEndDate
+            }).unwrap();
+
+            toast.success("Project created successfully", {
+                id: toastId,
+                description: "Your new project is ready.",
+            });
+            setProjectName("");
+            setDescription("");
+            setStartDate("");
+            setEndDate("");
+            onClose();
+        } catch {
+            toast.error("Failed to create project", {
+                id: toastId,
+                description: "Please try again.",
+            });
+        }
 
     };
     

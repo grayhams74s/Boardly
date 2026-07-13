@@ -8,6 +8,15 @@
 }
 
 /* TIMELINE STYLING */
+.timeline,
+.timeline * {
+  font-family: var(--font-geist-sans), sans-serif !important;
+}
+
+.timeline svg text {
+  font-family: var(--font-geist-sans), sans-serif !important;
+}
+
 .timeline ._3_ygE {
   @apply rounded-tl-md border border-r-0 border-[#e6e4e4] dark:border-stroke-dark;
 }

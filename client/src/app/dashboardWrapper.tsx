@@ -3,6 +3,7 @@
 import React, { useEffect } from "react";
 import Navbar from "./(components)/Navbar";
 import Sidebar from "./(components)/Sidebar";
+import { Toaster } from "./(components)/ui/sonner";
 import StoreProvider, { useAppSelector } from "./redux";
 
 
@@ -25,6 +26,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
         <Navbar />
         {children}
       </main>
+      <Toaster position="bottom-right" />
     </div>
   );
 };
