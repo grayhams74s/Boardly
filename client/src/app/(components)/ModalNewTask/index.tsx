@@ -1,4 +1,4 @@
-import { useCreateProjectMutation, useCreateTaskMutation } from '@/state/api';
+import { Priority, Status, useCreateProjectMutation, useCreateTaskMutation } from '@/state/api';
 import React, { useState } from 'react'
 import Modal from '../Modal';
 import { FilePlusCorner } from 'lucide-react';
@@ -13,16 +13,21 @@ type Props = {
 
 const ModalNewTask = ({ isOpen, onClose }: Props) => {
     const [ createTask ] =useCreateTaskMutation();
-    const [projectName, setProjectName] = useState("");
+    const [title, setTitle] = useState("");
     const [description, setDescription] = useState("")
+    const [status, setStatus] = useState<Status>(Status.ToDo)
+    const [priority, setPriority] = useState<Priority>(Priority.Backlog)
+    const [tags, setTags] = useState("")
     const [startDate, setStartDate] = useState("");
-    const [endDate, setEndDate] = useState("");
+    const [dueDate, setDueDate] = useState("");
+    const [authorUserId, setAuthorUserId] = useState("")
+    const [assignedUserId, setAssigneUserId] = useState("")
 
     const handleSubmit = async () => {
-        if (!projectName || !startDate  || !endDate ) return
+        if (!title || !startDate  || !dueDate ) return
 
         const formattedStartDate = formatISO(new Date(startDate), { representation: "complete"})
-        const formattedEndDate = formatISO(new Date(endDate), { representation: "complete"})
+        const formattedEndDate = formatISO(new Date(dueDate), { representation: "complete"})
 
         const toastId = toast.loading("Creating project", {
             description: "Please wait while your project is being created.",
@@ -32,22 +37,30 @@ const ModalNewTask = ({ isOpen, onClose }: Props) => {
         {/** We Create New Project we're passing in the project list that gets sent to the backend and our backend is going to utilize
             this values once we hit submit. */}
         try {
-            await createProject({
-                name: projectName,
-                description: description,
-                startDate: formattedStartDate,
-                endDate: formattedEndDate
+            await createTask({
+                title,
+                description,
+                status,
+                priority,
+                tags,
+                startDate,
+                dueDate,
+                authorUserId: parseInt(authorUserId),
+                assignedUserId: parseInt(assignedUserId)
             }).unwrap();
 
             toast.success("Project created successfully", {
                 id: toastId,
                 description: "Your new project is ready.",
             });
-            setProjectName("");
+            setTitle("");
             setDescription("");
             setStartDate("");
-            setEndDate("");
+            setDueDate("");
             onClose();
+            setTags("")
+            setAuthorUserId("")
+            setAssigneUserId("")
         } catch {
             toast.error("Failed to create project", {
                 id: toastId,
