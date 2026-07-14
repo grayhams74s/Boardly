@@ -1,22 +1,17 @@
 'use client'
 
 import { useAppSelector } from '@/app/redux';
-import { useGetProjectsQuery, useGetTasksQuery } from '@/state/api';
+import { useGetProjectsQuery } from '@/state/api';
 import { DisplayOption, Gantt, ViewMode } from "gantt-task-react"
-import { ChevronDown, Plus } from "lucide-react";
+import { ChevronDown } from "lucide-react";
 import React, { useMemo, useState } from 'react'
 import "gantt-task-react/dist/index.css"
 import Header from '../(components)/Header';
 
 
-type TimelineProps = {
-    id: string;
-    setIsModalNewTaskOpen: (isOpen: boolean) => void;
-}
-
 type TaskTypeItems = "task" | "milestone" | "project";
 
-const TimelineView = ( { id, setIsModalNewTaskOpen } : TimelineProps ) => {
+const TimelineView = () => {
 
   const isDarkMode = useAppSelector((state) => state.global.isDarkMode);
 
@@ -26,6 +21,36 @@ const TimelineView = ( { id, setIsModalNewTaskOpen } : TimelineProps ) => {
     viewMode: ViewMode.Month,
     locale: "en-US"
   })
+
+  const ganttColors = isDarkMode
+    ? {
+        projectBackgroundColor: "#60a5fa",
+        projectBackgroundSelectedColor: "#93c5fd",
+        projectProgressColor: "#3b82f6",
+        projectProgressSelectedColor: "#60a5fa",
+        barBackgroundColor: "#60a5fa",
+        barBackgroundSelectedColor: "#93c5fd",
+        barProgressColor: "#3b82f6",
+        barProgressSelectedColor: "#60a5fa",
+        milestoneBackgroundColor: "#60a5fa",
+        milestoneBackgroundSelectedColor: "#93c5fd",
+        arrowColor: "#94a3b8",
+        todayColor: "rgba(96, 165, 250, 0.14)",
+      }
+    : {
+        projectBackgroundColor: "#60a5fa",
+        projectBackgroundSelectedColor: "#93c5fd",
+        projectProgressColor: "#3b82f6",
+        projectProgressSelectedColor: "#60a5fa",
+        barBackgroundColor: "#60a5fa",
+        barBackgroundSelectedColor: "#93c5fd",
+        barProgressColor: "#3b82f6",
+        barProgressSelectedColor: "#60a5fa",
+        milestoneBackgroundColor: "#60a5fa",
+        milestoneBackgroundSelectedColor: "#93c5fd",
+        arrowColor: "#64748b",
+        todayColor: "rgba(96, 165, 250, 0.1)",
+      };
 
   const ganttTasks = useMemo(() => {
     return (
@@ -80,16 +105,16 @@ const TimelineView = ( { id, setIsModalNewTaskOpen } : TimelineProps ) => {
       </div>
 
       {/** Gantt Board */}
-      <div className='overflow-hidden rounded-md bg-white shadow dark:bg-dark-secondary dark:text-white'>
+      <div className='overflow-hidden rounded-md border border-blue-100 bg-white shadow-sm dark:border-stroke-dark dark:bg-dark-secondary dark:text-white'>
         <div className='timeline'>
           <Gantt
             tasks={ganttTasks}
             {...displayOptions}
+            {...ganttColors}
             columnWidth={displayOptions.viewMode === ViewMode.Month ? 150 : 100}
             listCellWidth='100px'
-            projectBackgroundColor={isDarkMode ? "101214" : "#1f2937"}
-            projectProgressColor={isDarkMode ? "#1f2937" : "aeb8c2"}
-            projectProgressSelectedColor={isDarkMode ? "#000" : "9ba1a6"}
+            barCornerRadius={6}
+            barFill={65}
           /> 
         </div>
       </div>

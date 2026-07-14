@@ -28,6 +28,36 @@ const TimelineView = ( { id, setIsModalNewTaskOpen } : TimelineProps ) => {
     locale: "en-US"
   })
 
+  const ganttColors = isDarkMode
+    ? {
+        barBackgroundColor: "#60a5fa",
+        barBackgroundSelectedColor: "#93c5fd",
+        barProgressColor: "#3b82f6",
+        barProgressSelectedColor: "#60a5fa",
+        projectBackgroundColor: "#60a5fa",
+        projectBackgroundSelectedColor: "#93c5fd",
+        projectProgressColor: "#3b82f6",
+        projectProgressSelectedColor: "#60a5fa",
+        milestoneBackgroundColor: "#60a5fa",
+        milestoneBackgroundSelectedColor: "#93c5fd",
+        arrowColor: "#94a3b8",
+        todayColor: "rgba(96, 165, 250, 0.14)",
+      }
+    : {
+        barBackgroundColor: "#60a5fa",
+        barBackgroundSelectedColor: "#93c5fd",
+        barProgressColor: "#3b82f6",
+        barProgressSelectedColor: "#60a5fa",
+        projectBackgroundColor: "#60a5fa",
+        projectBackgroundSelectedColor: "#93c5fd",
+        projectProgressColor: "#3b82f6",
+        projectProgressSelectedColor: "#60a5fa",
+        milestoneBackgroundColor: "#60a5fa",
+        milestoneBackgroundSelectedColor: "#93c5fd",
+        arrowColor: "#64748b",
+        todayColor: "rgba(96, 165, 250, 0.1)",
+      };
+
   const ganttTasks = useMemo(() => {
     return (
       tasks?.map((task) => ({
@@ -81,15 +111,16 @@ const TimelineView = ( { id, setIsModalNewTaskOpen } : TimelineProps ) => {
       </div>
 
       {/** Gantt Board */}
-      <div className='overflow-hidden rounded-md bg-white shadow dark:bg-dark-secondary dark:text-white'>
+      <div className='overflow-hidden rounded-md border border-blue-100 bg-white shadow-sm dark:border-stroke-dark dark:bg-dark-secondary dark:text-white'>
         <div className='timeline'>
           <Gantt
             tasks={ganttTasks}
             {...displayOptions}
+            {...ganttColors}
             columnWidth={displayOptions.viewMode === ViewMode.Month ? 150 : 100}
             listCellWidth='100px'
-            barBackgroundColor="#2563eb"
-            barBackgroundSelectedColor="#60a5fa"
+            barCornerRadius={6}
+            barFill={65}
           />
         </div>
         <div className='px-4 pb-5 pt-1'>
