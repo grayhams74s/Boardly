@@ -8,6 +8,8 @@ import { DndProvider, useDrag, useDrop } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
 import { Task as TaskType } from "@/state/api";
 import { format } from "date-fns";
+import { BoardViewSkeleton } from "../loading-skeletons";
+import { useMinimumLoading } from "../use-minimum-loading";
 
 type BoardProps = {
     id: string;
@@ -17,12 +19,9 @@ type BoardProps = {
 const taskStatus = ["To Do", "Work In Progress", "Under Review", "Completed"];
 const TASK_DRAG_TYPE = "task";
 
-type DragTask = {
-  id: number;
-};
-
 const BoardView = ({id, setIsModalNewTaskOpen}: BoardProps) => {
     const { data: tasks, isLoading, error } = useGetTasksQuery({ projectId: Number(id)});
+    const showSkeleton = useMinimumLoading(isLoading);
 
     //API Query
     const [ updateTaskStatus ] = useUpdateTaskStatusMutation();
@@ -32,8 +31,8 @@ const BoardView = ({id, setIsModalNewTaskOpen}: BoardProps) => {
       await updateTaskStatus({ taskId, status: toStatus }).unwrap();
     };
 
-    if (isLoading) {
-      return <div className="p-4 text-sm text-gray-500 dark:text-neutral-400">Loading tasks...</div>;
+    if (showSkeleton) {
+      return <BoardViewSkeleton />;
     }
 
     if (error) {

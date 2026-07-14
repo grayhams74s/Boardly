@@ -9,88 +9,40 @@ const prisma = new PrismaClient({ adapter });
 
 
 export const search = async (req: Request, res: Response): Promise<void> => {
-    
-    const projectId = Number(req.query.projectId);
 
-    if (!Number.isInteger(projectId)) {
-        res.status(400).json({ message: "A valid projectId query parameter is required" });
-        return;
-    }
+    const { query } = req.query;
 
     try {
         const tasks = await prisma.task.findMany({
             where: {
-                projectId
-            }, 
-            include: {
-                author: true,
-                assignee: true,
-                comments: true,
-                attachments: true,
+                OR: [
+                    { title: { contains: query as string }},
+                    { description: { contains: query as string }}
+                ]
             }
-        });
-        res.status(200).json(tasks);
-    } catch (error) {
-        res.status(500).json({ message: "Error Retrieving Tasks", error: error });
+        })
+
+        const project = await prisma.project.findMany({
+            where: {
+                OR: [
+                    {name: {contains: query as string}},
+                    { description: { contains: query as string}}
+                ]
+            }
+        })
+
+        const users = await prisma.user.findMany({
+            where: {
+                OR: [
+                    {username: {contains: query as string}},
+                ]
+            }
+        })
+
+        res.json({ tasks, project, users});
+    } catch (error: any) {
+        res
+         .status(500)
+         .json({ mesasage: 'Error performing search'})
     }
 };
-
-
-export const createTask = async (req: Request, res: Response): Promise <void> => {
-    const { 
-        title, 
-        description, 
-        status, 
-        priority,
-        tags,
-        startDate,
-        dueDate,
-        points,
-        projectId,
-        authorUserId,
-        assignedUserId, 
-    } = req.body;
-    
-    try {
-        const tasks = await prisma.task.create({
-            data: {
-                title, 
-                description, 
-                status, 
-                priority,
-                tags,
-                startDate,
-                dueDate,
-                points,
-                projectId,
-                authorUserId,
-                assignedUserId, 
-            }
-        });
-        res.status(200).json(tasks);
-    } catch (error) {
-        res.status(500).json({ message: "Error Creating a Tasks", error: error });
-    }
-}
-
-export const UpdateTaskStatus = async ( req: Request, res: Response ): Promise<void> => {
-    // We wukk be getting our taskId tru Route Params
-    const { taskId } = req.params;
-    // We will be getting our new task status or we will be sending our JSON Body Request tru this Controller or post Request.
-    // We are going to get our new Status to our JSON Body Request
-    const { status } = req.body
-
-    try {
-        const tasks = await prisma.task.update({
-            where: {
-               id: Number(taskId)
-            }, 
-            data: {
-                status
-            }
-        });
-        res.status(200).json(tasks);
-    } catch (error) {
-        res.status(500).json({ message: "Error Retrieving Tasks", error: error });
-    }
-}

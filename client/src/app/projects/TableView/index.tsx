@@ -5,6 +5,8 @@ import React from 'react'
 import { DataGrid, GridColDef } from "@mui/x-data-grid"
 import { dataGridGlass } from '@/app/lib/utils';
 import { Plus } from 'lucide-react';
+import { TableViewSkeleton } from '../loading-skeletons';
+import { useMinimumLoading } from '../use-minimum-loading';
 
 type TableViewProps = {
     id: string;
@@ -173,9 +175,10 @@ const TableView = ({ id, setIsModalNewTaskOpen }: TableViewProps) => {
         error,
         isLoading,
       } = useGetTasksQuery({ projectId: Number(id) });      
+      const showSkeleton = useMinimumLoading(isLoading);
 
-      if (isLoading) {
-        return <div className="p-6 text-sm text-gray-500 dark:text-gray-400">Loading tasks...</div>;
+      if (showSkeleton) {
+        return <TableViewSkeleton />;
       }
 
       if (error) {

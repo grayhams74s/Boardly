@@ -3,6 +3,8 @@ import TaskCard from '../../(components)/TaskCard'
 import { useGetTasksQuery, Task } from '@/state/api';
 import { Plus } from 'lucide-react';
 import React from 'react'
+import { ListViewSkeleton } from '../loading-skeletons';
+import { useMinimumLoading } from '../use-minimum-loading';
 
 type Props = {
     id: string;
@@ -17,9 +19,10 @@ const ListView =  ({ id, setIsModalNewTaskOpen }: Props) => {
         error,
         isLoading,
       } = useGetTasksQuery({ projectId: Number(id) });      
+      const showSkeleton = useMinimumLoading(isLoading);
 
-      if (isLoading) {
-        return <div className="p-6 text-sm text-gray-500 dark:text-gray-400">Loading tasks...</div>;
+      if (showSkeleton) {
+        return <ListViewSkeleton />;
       }
 
       if (error) {

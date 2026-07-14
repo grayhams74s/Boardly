@@ -4,6 +4,8 @@ import { DisplayOption, Gantt, ViewMode } from "gantt-task-react"
 import { ChevronDown, Plus } from "lucide-react";
 import React, { useMemo, useState } from 'react'
 import "gantt-task-react/dist/index.css"
+import { TimelineViewSkeleton } from '../loading-skeletons';
+import { useMinimumLoading } from '../use-minimum-loading';
 
 
 type TimelineProps = {
@@ -22,6 +24,7 @@ const TimelineView = ( { id, setIsModalNewTaskOpen } : TimelineProps ) => {
     error,
     isLoading,
   } = useGetTasksQuery({ projectId: Number(id) });      
+  const showSkeleton = useMinimumLoading(isLoading);
 
   const [ displayOptions, setIsDisplayOptions ] = useState<DisplayOption>({
     viewMode: ViewMode.Month,
@@ -81,7 +84,7 @@ const TimelineView = ( { id, setIsModalNewTaskOpen } : TimelineProps ) => {
     }))
   }
 
-  if (isLoading) return <div>Loading...</div>;
+  if (showSkeleton) return <TimelineViewSkeleton />;
   if (error) return <div> An Error  occured while fetching tasks</div>
 
   return (
