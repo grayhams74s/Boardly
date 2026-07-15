@@ -18,7 +18,11 @@ const Search = () => {
       );
 
   return (
-    <div className='bg-white'>page</div>
+    <div className='bg-white'>
+      <div>
+        <input type="text" />
+      </div>
+    </div>
   )
 }
 
