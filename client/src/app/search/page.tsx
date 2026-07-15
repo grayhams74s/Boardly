@@ -10,10 +10,15 @@ const Search = () => {
         skip: searchTerm.length < 3
     });
 
-    const handleSearch = debounce
+    const handleSearch = debounce(
+        (event: React.ChangeEvent<HTMLInputElement>) => {
+          setSearchTerm(event.target.value);
+        },
+        500
+      );
 
   return (
-    <div>page</div>
+    <div className='bg-white'>page</div>
   )
 }
 
